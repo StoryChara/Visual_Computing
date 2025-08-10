@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Computing</title>
+
+    <!-- Favicon estándar -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="shortcut icon" href="favicon_io/favicon.ico">
+
+    <!-- Iconos para dispositivos Android -->
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon_io/android-chrome-192x192.png">
+
+    <!-- Icono para dispositivos Apple -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+
+    <!-- Archivo manifest para compatibilidad con apps web progresivas -->
+    <link rel="manifest" href="favicon_io/site.webmanifest">
+
+    <!-- External Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+
+    <!-- Custom Fonts -->
+    <style>
+
+        /* Duck Hunt Font */
+        @font-face {
+            font-family: 'Duck Hunt';
+            src: url("Duck-Hunt/resources/fonts/DUCK_HOUND.ttf") format("truetype");
+        }
+
+        /* Punch Out Font */
+        @font-face {
+            font-family: 'Punch Out';
+            src: url("Punch-Out/resources/punch-out-nes.ttf") format("truetype");
+        }
+
+        /* Angry Birds Font */
+        @font-face {
+            font-family: 'Angry Birds';
+            src: url("Angry-Birds/resources/others/angrybirds-regular.ttf") format("truetype");
+        }
+
+        /* Shader Minecraft Font */
+        @font-face {
+            font-family: 'Shader Minecraft';
+            src: url("Fog-Shader/resources/MinecraftBold-nMK1.otf") format("truetype");
+        }
+
+        /* Root Variables */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --accent-blue: #00d4ff;
+            --accent-purple: #8b5cf6;
+            --border-color: #333333;
+            --shadow-primary: 0 8px 32px rgba(0, 212, 255, 0.1);
+            --shadow-hover: 0 12px 48px rgba(0, 212, 255, 0.2);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1a2e 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .project-button {
+            position: relative;
+            padding: 0.75rem 0.5rem;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.05em;
+            overflow: hidden;
+            box-shadow: var(--shadow-primary);
+        }
+
+        .project-button:hover::before {
+            left: 100%;
+        }
+
+        .project-button:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+            border-color: currentColor;
+        }
+
+        .project-button:active {
+            transform: translateY(-4px) scale(0.98);
+        }
+
+        /* Individual Button Styles */
+        .duck-hunt {
+            font-family: 'Duck Hunt', 'Courier New', monospace;
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c59 100%);
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-size: 100%;
+        }
+
+        .duck-hunt:hover {
+            box-shadow: 0 12px 48px rgba(255, 215, 0, 0.3);
+        }
+
+        .punch-out {
+            font-family: 'Punch Out', 'Impact', sans-serif;
+            background: linear-gradient(135deg, #8b0000 0%, #dc143c 100%);
+            color: #ffffff;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9);
+            text-transform: uppercase;
+            font-size: 100%;
+        }
+
+        .punch-out:hover {
+            box-shadow: 0 12px 48px rgba(220, 20, 60, 0.4);
+        }
+
+        .angry-birds {
+            font-family: 'Angry Birds', 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #ff4444 0%, #ff8800 100%);
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            font-size: 125%;
+        }
+
+        .angry-birds:hover {
+            box-shadow: 0 12px 48px rgba(255, 68, 68, 0.4);
+        }
+
+        .fog-shader {
+            font-family: 'Shader Minecraft', 'Courier New', monospace;
+            background: linear-gradient(135deg, #303030 0%, #1c1c1f 100%);
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(201, 201, 201, 0.5);
+            border: 1px solid #000;
+            font-variant: small-caps;
+        }
+
+        .fog-shader:hover {
+            box-shadow: 0 12px 48px rgba(201, 201, 201, 0.3);
+        }
+
+        .stonehenge {
+            font-family: 'Merriweather', serif;
+            background: linear-gradient(135deg, #8b7355 0%, #a0522d 100%);
+            color: #f5deb3;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            font-style: italic;
+        }
+
+        .stonehenge:hover {
+            box-shadow: 0 12px 48px rgba(160, 82, 45, 0.3);
+        }
+
+        /* Iframe Container */
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 85vh;
+            min-height: 500px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .iframe-container::before {
+            content: 'Selecciona un proyecto para comenzar';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .iframe-container.loaded::before {
+            opacity: 0;
+        }
+
+        #project-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff;
+            transition: opacity 0.3s;
+        }
+
+        /* Repository Link Container */
+        .repository-link-container {
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .repository-link-container.show {
+            opacity: 1;
+        }
+
+        .repository-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            box-shadow: var(--shadow-primary);
+        }
+
+        .repository-link:hover {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 2;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .project-button {
+                padding: 1.5rem 1rem;
+                font-size: 1.25rem;
+            }
+
+            .iframe-container {
+                height: 60vh;
+                min-height: 400px;
+            }
+        }
+
+        /* Current Project Indicator */
+        .project-button.active {
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Visual Computing</h1>
+        </header>
+
+        <main>
+            <div class="projects-grid">
+                <button class="project-button duck-hunt" onclick="loadProject('Duck-Hunt/index.html', this, 'duck-hunt')">
+                    🦆 Duck Hunt
+                </button>
+                <button class="project-button punch-out" onclick="loadProject('Punch-Out/index.html', this, 'punch-out')">
+                    🥊 Punch-Out!!!
+                </button>
+                <button class="project-button angry-birds" onclick="loadProject('Angry-Birds/index.html', this, 'angry-birds')">
+                    🐦 Angry Birds
+                </button>
+                <button class="project-button fog-shader" onclick="loadProject('Fog-Shader/index.html', this, 'fog-shader')">
+                    🌫️ Fog Shader
+                </button>
+                <button class="project-button stonehenge" onclick="loadProject('Stonehenge/index.html', this, 'stonehenge')">
+                    🗿 Stonehenge
+                </button>
+            </div>
+
+            <div class="iframe-container" id="iframe-container">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                </div>
+                <iframe id="project-iframe" src="" allowfullscreen></iframe>
+            </div>
+
+            <div class="repository-link-container" id="repository-link-container">
+                <a href="#" target="_blank" class="repository-link" id="repository-link">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    Ver en GitHub
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentButton = null;
+
+        // Repository URLs mapping
+        const repositoryUrls = {
+            'duck-hunt': 'https://github.com/StoryChara/Duck-Hunt',
+            'punch-out': 'https://github.com/StoryChara/punch-out',
+            'angry-birds': 'https://github.com/StoryChara/Angry-Birds',
+            'fog-shader': 'https://github.com/StoryChara/Fog-Shader',
+            'stonehenge': 'https://github.com/StoryChara/stonehenge'
+        };
+
+        function loadProject(projectPath, buttonElement, projectKey) {
+            const iframe = document.getElementById('project-iframe');
+            const container = document.getElementById('iframe-container');
+            const loading = document.getElementById('loading');
+            const repositoryLinkContainer = document.getElementById('repository-link-container');
+            const repositoryLink = document.getElementById('repository-link');
+
+            // Remove active state from all buttons
+            document.querySelectorAll('.project-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active state to clicked button
+            buttonElement.classList.add('active');
+            currentButton = buttonElement;
+
+            // Show loading animation
+            loading.classList.add('show');
+            iframe.style.opacity = '0';
+
+            // Update repository link
+            if (repositoryUrls[projectKey]) {
+                repositoryLink.href = repositoryUrls[projectKey];
+                repositoryLinkContainer.classList.add('show');
+            }
+
+            // Load the project
+            iframe.onload = function() {
+                setTimeout(() => {
+                    loading.classList.remove('show');
+                    iframe.style.opacity = '1';
+                    container.classList.add('loaded');
+                }, 500);
+            };
+
+            iframe.onerror = function() {
+                loading.classList.remove('show');
+                iframe.style.opacity = '1';
+                console.error('Error loading project:', projectPath);
+                alert('Error al cargar el proyecto. Verifica que el archivo existe.');
+            };
+
+            iframe.src = projectPath;
+
+        }
+
+        // Add hover sound effect (optional)
+        document.querySelectorAll('.project-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                // Optional: Add hover sound effect here
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+
+            button.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'translateY(0) scale(1)';
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

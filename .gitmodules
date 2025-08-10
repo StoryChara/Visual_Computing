@@ -1,0 +1,15 @@
+[submodule "Duck-Hunt"]
+	path = Duck-Hunt
+	url = https://github.com/StoryChara/Duck-Hunt
+[submodule "Punch-Out"]
+	path = Punch-Out
+	url = https://github.com/StoryChara/punch-out
+[submodule "Angry-Birds"]
+	path = Angry-Birds
+	url = https://github.com/StoryChara/Angry-Birds
+[submodule "Fog-Shader"]
+	path = Fog-Shader
+	url = https://github.com/StoryChara/Fog-Shader
+[submodule "Stonehenge"]
+	path = Stonehenge
+	url = https://github.com/StoryChara/stonehenge
