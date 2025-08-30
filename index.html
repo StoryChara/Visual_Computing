@@ -49,6 +49,11 @@
             src: url("Fog-Shader/resources/MinecraftBold-nMK1.otf") format("truetype");
         }
 
+        @font-face {
+            font-family: "Snake";
+            src: url("Snake/SnakeGameDemoRegular.ttf") format("truetype");
+        }
+
         /* Root Variables */
         :root {
             --bg-primary: #0a0a0a;
@@ -225,11 +230,22 @@
             background: linear-gradient(135deg, #2299E2 0%, #196EA3 100%);
             color: #ffffff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-
         }
 
         .texture:hover {
             box-shadow: 0 12px 48px #26A7F84d;
+        }
+
+        .snake {
+            font-family: 'Snake', serif;
+            background: linear-gradient(135deg, #96c004 0%, #617a03 100%);
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            letter-spacing: 5px; 
+        }
+
+        .snake:hover {
+            box-shadow: 0 12px 48px #97c0048e;
         }
 
         /* Iframe Container */
@@ -379,6 +395,9 @@
                 <button class="project-button stonehenge" onclick="loadProject('Stonehenge/index.html', this, 'stonehenge')">
                     🗿 Stonehenge
                 </button>
+                <button class="project-button snake" onclick="loadProject('Snake/index.html', this, 'snake')">
+                    🐍 Snake
+                </button>
             </div>
 
             <div class="iframe-container" id="iframe-container">
@@ -409,7 +428,8 @@
             'angry-birds': 'https://github.com/StoryChara/Angry-Birds',
             'fog-shader': 'https://github.com/StoryChara/Fog-Shader',
             'stonehenge': 'https://github.com/StoryChara/stonehenge',
-            'texture': 'https://github.com/StoryChara/Procedural-Texture'
+            'texture': 'https://github.com/StoryChara/Procedural-Texture',
+            'snake': 'https://github.com/StoryChara/Snake'
         };
 
         function loadProject(projectPath, buttonElement, projectKey) {

@@ -16,3 +16,6 @@
 [submodule "Procedural-Texture"]
 	path = Procedural-Texture
 	url = https://github.com/StoryChara/Procedural-Texture.git
+[submodule "Snake"]
+	path = Snake
+	url = https://github.com/StoryChara/Snake
