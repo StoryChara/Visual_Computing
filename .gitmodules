@@ -13,3 +13,6 @@
 [submodule "Stonehenge"]
 	path = Stonehenge
 	url = https://github.com/StoryChara/stonehenge
+[submodule "Procedural-Texture"]
+	path = Procedural-Texture
+	url = https://github.com/StoryChara/Procedural-Texture.git

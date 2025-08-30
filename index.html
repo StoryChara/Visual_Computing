@@ -220,6 +220,18 @@
             box-shadow: 0 12px 48px rgba(160, 82, 45, 0.3);
         }
 
+        .texture {
+            font-family: 'Merriweather', serif;
+            background: linear-gradient(135deg, #2299E2 0%, #196EA3 100%);
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+
+        }
+
+        .texture:hover {
+            box-shadow: 0 12px 48px #26A7F84d;
+        }
+
         /* Iframe Container */
         .iframe-container {
             position: relative;
@@ -361,6 +373,9 @@
                 <button class="project-button fog-shader" onclick="loadProject('Fog-Shader/index.html', this, 'fog-shader')">
                     🌫️ Fog Shader
                 </button>
+                <button class="project-button texture" onclick="loadProject('Procedural-Texture/index.html', this, 'texture')">
+                    🖼️ Procedural Texture
+                </button>
                 <button class="project-button stonehenge" onclick="loadProject('Stonehenge/index.html', this, 'stonehenge')">
                     🗿 Stonehenge
                 </button>
@@ -393,7 +408,8 @@
             'punch-out': 'https://github.com/StoryChara/punch-out',
             'angry-birds': 'https://github.com/StoryChara/Angry-Birds',
             'fog-shader': 'https://github.com/StoryChara/Fog-Shader',
-            'stonehenge': 'https://github.com/StoryChara/stonehenge'
+            'stonehenge': 'https://github.com/StoryChara/stonehenge',
+            'texture': 'https://github.com/StoryChara/Procedural-Texture'
         };
 
         function loadProject(projectPath, buttonElement, projectKey) {
